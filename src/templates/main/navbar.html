@@ -2,64 +2,86 @@
 {% url 'posts:main-post-view' as path_to_posts %}
 {% url 'profiles:my-profile-view' as path_to_my_profile %}
 {% url 'profiles:my-invites-view' as path_to_my_invites %}
-{% url 'profiles:invite-profiles-view' as path_to_invites %}
 {% url 'profiles:all-profiles-view' as path_to_all_profiles %}
 {% load socialaccount %}
 
-<div class="ui inverted menu nav mb-7">
-  <div class="ui container">
-    <a href="{{path_to_home}}" class="{% if request.path == path_to_home %}active{% endif %} item">
-        <h3>Social</h3>
-    </a>
-    <a href="{{path_to_posts}}" class="{% if request.path == path_to_posts %}active{% endif %} item">
-        Лента
-    </a>
-    <div class="right menu">
-        {% if request.user.is_authenticated %}
-        <div class="item">
-            <div class="ui floating dropdown icon primary button"> Друзья
-                <i class="dropdown icon"></i>
-                <div class="menu">
-                    <a href="{{path_to_all_profiles}}" class="{% if request.path == path_to_all_profiles %}active{% endif %} item">
-                        Все пользователи
-                    </a>
-                    <a href="{{path_to_invites}}" class="{% if request.path == path_to_invites %}active{% endif %} item">
-                        Не принятые запросы дружбы
-                    </a>
-                    <a href="{{path_to_my_invites}}" class="{% if request.path == path_to_my_invites %}active{% endif %} item">
-                        Полученные приглашения дружбы &nbsp; <div class="ui purple horizontal label"> {{invites_num}}</div>
-                    </a>
-                </div>
-             </div>
+
+<body>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+</body>
+
+<nav class="navbar navbar-expand-lg bg-body-tertiary ">
+    <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                  <a href="{{path_to_home}}" class="nav-link">
+                      Social
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{path_to_posts}}" class="nav-link">
+                      Лента
+                  </a>
+                </li>
+                {% if request.user.is_authenticated %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false">
+                            Друзья
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a href="{{path_to_all_profiles}}" class="dropdown-item">
+                                Все пользователи
+                            </a>
+                            <a href="{{path_to_my_invites}}" class="dropdown-item">
+                                Полученные приглашения дружбы &nbsp; {{invites_num}}
+                            </a>
+                        </div>
+                    </li>
+                    <li>
+                        <form action="" method="GET" class="d-flex" role="search">
+                            <input class="form-control me-2" type="search" name='search' placeholder="Имя друга..." aria-label="Search">
+                            <i class="search icon"></i>
+                            <button type='submit' class="btn btn-outline-success">Поиск</button>
+                        </form>
+                    </li>
+                {% endif %}
+            </ul>
+
+            <ul class="navbar-nav ">
+              {% if request.user.is_authenticated %}
+                <li class="nav-item">
+                  <a href="{{path_to_my_profile}}" class="nav-link">
+                     <img width="40" height="40" src={{picture.url}}>&nbsp;
+                     {{ request.user }}
+                  </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'account_logout' %}" class="nav-link">Выход</a>
+                </li>
+              {% else %}
+                  <a href="{% provider_login_url 'google' %}" class="nav-link">
+                      <div>
+                          <img class="google-icon"
+                               src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" height="30"/>
+                      </div>
+                      <p><b>&nbsp Вход</b></p>
+                  </a>
+              {% endif %}
+              </ul>
         </div>
-             <div class="item">
-              <form action="" method="GET">
-                <div class="ui action left icon input">
-                <input class="prompt" type="text" name='q' placeholder="Имя друга...">
-                <i class="search icon"></i>
-                <button type='submit' class="ui button">Поиск</button>
-                </div>
-            </form>
-            </div>
-
-            <a href="{{path_to_my_profile}}" class="{% if request.path == path_to_my_profile %}active{% endif %} item">
-                 <img src={{picture.url}} class="ui avatar image">&nbsp;
-                 {{ request.user }}
-            </a>
-
-            <a href="{% url 'account_logout' %}" class="ui item">
-                Выход
-            </a>
-        {% else %}
-
-        <a href="{% provider_login_url 'google' %}" class="ui item">
-            <div>
-                <img class="google-icon"
-                     src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" height="30"/>
-            </div>
-            <p><b>&nbsp Вход</b></p>
-        </a>
-        {% endif %}
     </div>
-  </div>
-</div>
+</nav>
+
+

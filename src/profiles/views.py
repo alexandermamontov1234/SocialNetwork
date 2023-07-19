@@ -72,16 +72,6 @@ def reject_invatation(request):
 
 
 @login_required
-def invite_profile_list_view(request):
-    user = request.user
-    qs = Profile.objects.get_all_profiles_to_invite(user)
-
-    context = {'qs': qs}
-
-    return render(request, 'profiles/to_invite_list.html', context)
-
-
-@login_required
 def profiles_list_view(request):
     user = request.user
     qs = Profile.objects.get_all_profiles(user)

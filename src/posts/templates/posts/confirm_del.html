@@ -9,24 +9,18 @@ delete post
 {% if messages %}
     {% for message in messages %}
         {% if 'warning' in message.tags %}
-            <div class="ui negative message">
-                <div class="header">
-                    {{message}}
-                </div>
-            </div>
+            {{message}}
         {% endif %}
     {% endfor %}
 {% endif %}
 
 {% if not messages %}
-    <div class="ui segment">
-        <h3>Удалить пост?</h3>
-        <form action="" method="POST">
-            {% csrf_token %}
-            <p>Вы уверены, что хотите удалить пост?</p>
-            <button type="submit">Подтвердить</button>
-        </form>
-    </div>
+    <h3>Удалить пост?</h3>
+    <form action="" method="POST">
+        {% csrf_token %}
+        <p>Вы уверены, что хотите удалить пост?</p>
+        <button type="submit" class="btn btn-success">Подтвердить</button>
+    </form>
 {% endif %}
 
 {% endblock content %}

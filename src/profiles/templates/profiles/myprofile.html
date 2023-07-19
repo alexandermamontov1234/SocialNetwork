@@ -21,6 +21,7 @@
         <form action="" method="POST" class="ui form" enctype="multipart/form-data">
           {% csrf_token %}
           {{form.as_p}}
+        </form>
     </div>
     </div>
     <div class="actions">
@@ -28,73 +29,59 @@
           Подтвердить
           <i class="checkmark icon"></i>
         </button>
-        </form>
   </div>
 </div>
 
-<div class="ui segment">
-  {% if confirm %}
-    <div class="ui green message">Ваш профиль был отредактирован</div>
-  {% endif %}
-  <h3>Мой профиль: {{request.user}}</h3>
-  <div class="ui grid">
-    <div class="row">
-      <div class="six wide column">
-        <img class="ui medium rounded image" src={{profile.avatar.url}}>
-        <div class="row mt-5">
-          <button class="ui secondary button" id="modal-btn">Редактировать профиль</button>
-        </div>
-      </div>
-      <div class="ten wide column">
-        <table class="ui table">
-          <tbody>
-            <tr>
-              <td>Никнейм</td>
-              <td>{{profile.user}}</td>
-            </tr>
-            <tr>
-              <td>Имя</td>
-              <td>{{profile.first_name}}</td>
-            </tr>
-            <tr>
-              <td>Фамилия</td>
-              <td>{{profile.last_name}}</td>
-            </tr>
-            <tr>
-              <td>О себе</td>
-              <td>{{profile.bio}}</td>
-            </tr>
-            <tr>
-              <td>Количество друзей</td>
-              <td>{{profile.get_friends_no}}</td>
-            </tr>
-            <tr>
-              <td>Друзья</td>
-              <td>
-                <ul>
-                  {% for friend in profile.get_friends %}
-                    <li>{{friend}}</li>
-                  {% endfor %}
-                </ul>
-              </td>
-            </tr>
-            <tr>
-              <td>Количество постов</td>
-              <td>{{profile.get_posts_no}}</td>
-            </tr>
-            <tr>
-              <td>Лайков отправлено</td>
-              <td>{{profile.get_likes_given_no}}</td>
-            </tr>
-            <tr>
-              <td>Лайков получено</td>
-              <td>{{profile.get_likes_recieved_no}}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-</div>
 
+<div style="margin-top:20px; margin-left:20px">
+    <ul class="list-unstyled">
+      {% if confirm %}
+        Ваш профиль был отредактирован
+      {% endif %}
+      <li><h3>Мой профиль: {{request.user}}</h3></li>
+      <li>
+          <div class="col-4">
+            <img width="130" height="130" src={{profile.avatar.url}}>
+            <button class="btn btn-success" id="modal-btn">Редактировать профиль</button>
+          </div>
+      </li>
+        <li>
+          <div class="col-8">
+              <ul class="list-unstyled">
+
+                  <li>Никнейм
+                  {{profile.user}}</li>
+
+                  <li>Имя
+                  {{profile.first_name}}</li>
+
+                  <li>Фамилия
+                  {{profile.last_name}}</li>
+
+                  <li>О себе
+                  {{profile.bio}}</li>
+
+                  <li>Количество друзей
+                  {{profile.get_friends_no}}</li>
+
+                  <li>Друзья</li>
+                    <ul>
+                      {% for friend in profile.get_friends %}
+                        <li>{{friend}}</li>
+                      {% endfor %}
+                    </ul>
+
+                  <li>Количество постов
+                  {{profile.get_posts_no}}</li>
+
+                  <li>Лайков отправлено
+                  {{profile.get_likes_given_no}}</li>
+
+                  Лайков получено
+                  {{profile.get_likes_recieved_no}}</li>
+              </ul>
+          </div>
+        </li>
+    </ul>
+</div>
 {% endblock content %}

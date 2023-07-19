@@ -5,62 +5,55 @@
 {% endblock title %}
 
 {% block content %}
-    <div class="ui grid">
-        <br>
-        <div class="row">
-            <div class="four wide column">
-                <img class="ui medium rounded image" src={{object.avatar.url}}>
-                <h1>{{object.user}}</h1>
-                <div class="ui vertical fluid menu">
-                    <div class="item">
-                        Посты
-                        <div class="ui label">{{ object.get_posts_no }}</div>
-                    </div>
-                    <div class="item">
-                        Отправлено лайков
-                        <div class="ui label">{{ object.get_likes_given_no }}</div>
-                    </div>
-                    <div class="item">
-                        Получено лайков
-                        <div class="ui label">{{ object.get_likes_recieved_no }}</div>
-                    </div>
-                    <div class="item">
-                        Друзья
-                        <div class="ui label">{{ object.get_friends_no }}</div>
-                    </div>
-                </div>
-                {% if object.user not in rel_receiver and object.user not in rel_sender %}
-                    <form action="{% url 'profiles:send-invite' %}" method="POST">
-                        {% csrf_token %}
-                        <input type="hidden" name="profile_pk" value={{object.pk}}>
-                        <button type="submit" class="ui positive basic button mb-5 w-big"><i class="plus square icon"></i>Добавить в друзья</button>
-                    </form>
-                {% endif %}
+    <div class="row justify-content-start" style="margin-top:20px; margin-left:20px">
+            <div class="col-3">
+                <ul class="list-unstyled">
+                    <li><img width="200" height="200" src={{object.avatar.url}}></li>
+                    <li><h1>{{object.user}}</h1></li>
+                    <li>Количество постов: {{ object.get_posts_no }}</li>
+                    <li>Отправлено лайков: {{ object.get_likes_given_no }}</li>
+                    <li>Получено лайков: {{ object.get_likes_recieved_no }}</li>
+                    <li>Количество друзей: {{ object.get_friends_no }}</li>
+                    {% if object.user not in rel_receiver and object.user not in rel_sender %}
+                        <li>
+                            <form action="{% url 'profiles:send-invite' %}" method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="profile_pk" value={{object.pk}}>
+                                <button type="submit" class="btn btn-success">Добавить в друзья</button>
+                            </form>
+                        </li>
+                    {% endif %}
+                    {% if object.user in rel_receiver and request.user not in object.friends.all %}
+                        <li>
+                            <button class="btn btn-success">Ожидание подтверждения дружбы</button>
+                        </li>
+                    {% endif %}
 
-                {% if object.user in rel_receiver and request.user not in object.friends.all %}
-                    <button class="ui disabled button mb-5 w-big"><i class="user icon"></i>Ожидание подтверждения дружбы</button>
-                {% endif %}
-
-                {% if request.user in object.friends.all %}
-                    <form action="{% url 'profiles:remove-friend' %}" method="POST">
-                        {% csrf_token %}
-                        <input type="hidden" name="profile_pk" value={{object.pk}}>
-                        <button type="submit" class="ui negative basic button mb-5 w-big"><i class="minus square icon"></i>Удалить из друзей</button>
-                    </form>
-                {% endif %}
+                        {% if request.user in object.friends.all %}
+                            <li>
+                                <form action="{% url 'profiles:remove-friend' %}" method="POST">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="profile_pk" value={{object.pk}}>
+                                    <button type="submit" class="btn btn-danger">Удалить из друзей</button>
+                                </form>
+                            </li>
+                        {% endif %}
+                </ul>
             </div>
-            <div class="twelve wide column">
-                {% if len_posts %}
-                    {% for post in posts %}
-                        <div class="segment ui fluid">
-                            {{post.content}}
-                        </div>
-                    {% endfor %}
-                {% else %}
-                    <h1>У пользователя нет постов...</h1>
-                {% endif %}
+            <div class="col-9">
+                <ul class="list-unstyled">
+                    {% if len_posts %}
+                        <li>Посты:</li>
+                        {% for post in posts %}
+                            <li>
+                                {{post.content}}
+                            </li>
+                        {% endfor %}
+                    {% else %}
+                        <li><h1>У пользователя нет постов...</h1></li>
+                    {% endif %}
+                </ul>
             </div>
-        </div>
     </div>
 {% endblock content %}
 
