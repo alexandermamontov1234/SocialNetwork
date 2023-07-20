@@ -16,7 +16,8 @@
         crossorigin="anonymous"></script>
 </body>
 
-<nav class="navbar navbar-expand-lg bg-body-tertiary ">
+
+<nav class="navbar navbar-expand-lg bg-info" style="border-radius:15px">
     <div class="container-fluid">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -59,27 +60,22 @@
                 {% endif %}
             </ul>
 
-            <ul class="navbar-nav ">
+            <ul class="navbar-nav">
               {% if request.user.is_authenticated %}
                 <li class="nav-item">
-                  <a href="{{path_to_my_profile}}" class="nav-link">
-                     <img width="40" height="40" src={{picture.url}}>&nbsp;
-                     {{ request.user }}
-                  </a>
+                    <a class="nav-link" href="{{path_to_my_profile}}">
+                        <img width="30" height="30" src={{picture.url}} style="border-radius: 100px;">&nbsp; {{ request.user }}</a>
                 </li>
+
                 <li class="nav-item">
-                    <a href="{% url 'account_logout' %}" class="nav-link">Выход</a>
+                    <a class="nav-link" href="{% url 'account_logout' %}">Выход</a>
                 </li>
               {% else %}
                   <a href="{% provider_login_url 'google' %}" class="nav-link">
-                      <div>
-                          <img class="google-icon"
-                               src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" height="30"/>
-                      </div>
-                      <p><b>&nbsp Вход</b></p>
+                      <img class="google-icon" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" height="30"/>&nbsp Вход
                   </a>
               {% endif %}
-              </ul>
+            </ul>
         </div>
     </div>
 </nav>

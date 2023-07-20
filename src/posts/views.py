@@ -5,7 +5,6 @@ from profiles.models import Profile
 from .forms import PostModelForm, CommentModelForm
 from django.views.generic import UpdateView, DeleteView
 from django.contrib import messages
-from django.http import JsonResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -38,7 +37,6 @@ def post_comment_create_and_list_view(request):
         p_form = PostModelForm()
         c_form = CommentModelForm()
         post_added = False
-
 
         if 'submit_p_form' in request.POST:
             print(request.POST)
@@ -96,12 +94,7 @@ def like_unlike_post(request):
             post_obj.save()
             like.save()
 
-        data = {
-            'value': like.value,
-            'likes': post_obj.liked.all().count()
-        }
-
-        return JsonResponse(data, safe=False)
+        return redirect(request.META.get('HTTP_REFERER'))
     return redirect('posts:main-post-view')
 
 
@@ -115,7 +108,7 @@ class PostDeleteViev(LoginRequiredMixin, DeleteView):
         pk = self.kwargs.get('pk')
         obj = Post.objects.get(pk=pk)
         if not obj.author.user == self.request.user:
-            messages.warning(self.request, 'You need to be the author of the post in order to delete it')
+            messages.warning(self.request, 'Вы должны быть автором этого поста, чтобы удалить его')
         return obj
 
 
@@ -130,6 +123,5 @@ class PostUpdateView(LoginRequiredMixin, UpdateView):
         if form.instance.author == profile:
             return super().form_valid(form)
         else:
-            form.add_error(None, 'You need to be the author of the post in order to update it')
+            form.add_error(None, 'Вы должны быть автором этого поста, чтобы изменять его')
             return super().form_invalid(form)
-

@@ -6,67 +6,61 @@
 <div class="row justify-content-start" style="margin-top:20px; margin-left:20px">
     <div class="col-8">
         {% for obj in qs %}
-        <ul class="list-unstyled">
         <div class="border" style="padding-top:10px; padding-left:20px; padding-bottom:15px; padding-right:20px">
-            <li>
-                <img class="img-fluid" width="150" height="150" src={{obj.author.avatar.url}}>
-                {{ obj.author.user }} - {{ obj.created|timesince}} назад
-                {% if request.user == obj.author.user %}
-                    <a href="{% url 'posts:post-update' obj.pk %}"><button class="btn btn-outline-success">Редактировать</button></a>
-                    <a href="{% url 'posts:post-delete' obj.pk %}"><button class="btn btn-outline-danger">Удалить</button></a>
-                {% endif %}
-            </li>
-                {% if obj.image %}
-                    <img src={{obj.image.url}} class="img-fluid">
-                {% endif %}
-            <li>
-                <p> {{ obj.content }} </p>
-                    <form action="{% url 'posts:like-post-view' %}" method="POST" class='like-form' id='{{obj.id}}'>
-                        {% csrf_token %}
-                        <input type="hidden" name="post_id" value={{obj.id}}>
-                        <button type="submit" class="btn btn-success">
-                            {% if profile not in obj.liked.all %}
-                            Лайк
-                            {% else %}
-                            Дизлайк
-                            {% endif %}
-                        </button>
-                        {{obj.num_likes}}
-                        Лайки
-                    </form>
-                <span> Комментарии:</span>
-            </li>
-            <li>
-                {% if obj.comment_set.all %}
-                    {% for c in obj.comment_set.all %}
-                        <img width="40" height="40" src={{c.user.avatar.url}}>
-                        <span>{{ c.user }}</span>
-                        <div class='mt-5'>{{ c.body }}</div>
-                    {% endfor %}
-                {% endif %}
-                <form action="" method="POST">
-                    {% csrf_token %}
-                    <input type="hidden" name="post_id" value={{obj.id}}>
-                    {{ c_form }}
-                    <button type="submit" name="submit_c_form" class="btn btn-success">Отправить</button>
-                </form>
-            </li>
+            <img class="img-fluid" width="150" height="150" src={{obj.author.avatar.url}}>
+            {{ obj.author.user }} - {{ obj.created|timesince}} назад
+            {% if request.user == obj.author.user %}
+            <a href="{% url 'posts:post-update' obj.pk %}"><button class="btn btn-outline-success">Редактировать</button></a>
+            <a href="{% url 'posts:post-delete' obj.pk %}"><button class="btn btn-outline-danger">Удалить</button></a>
+            {% endif %}
+            {% if obj.image %}
+            <img src={{obj.image.url}} class="img-fluid">
+            {% endif %}
+            <p> {{ obj.content }} </p>
+            <form action="{% url 'posts:like-post-view' %}" method="POST" class='like-form' id='{{obj.id}}'>
+                {% csrf_token %}
+                <input type="hidden" name="post_id" value={{obj.id}}>
+                <button type="submit" class="btn btn-success">
+                    {% if profile not in obj.liked.all %}
+                    Лайк
+                    {% else %}
+                    Дизлайк
+                    {% endif %}
+                </button>
+                {{obj.num_likes}}
+                Лайки
+            </form>
+            Комментарии:
+            {% if obj.comment_set.all %}
+            <ul class="list-unstyled">
+                {% for c in obj.comment_set.all %}
+                <li>
+                <img width="40" height="40" src={{c.user.avatar.url}}>
+                {{ c.user }}
+                {{ c.body }}
+                {% endfor %}
+                </li>
+            </ul>
+            {% endif %}
+            <form action="" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="post_id" value={{obj.id}}>
+                {{ c_form }}
+                <button type="submit" name="submit_c_form" class="btn btn-success">Отправить</button>
+            </form>
         </div>
-
-        </ul>
+        <br>
         {% endfor %}
     </div>
     <div class="col-4">
-        <ul class="list-unstyled">
-            {% if post_added %}
-                <li>Пост создан</li>
-            {% endif %}
-            <form action="" method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
-                {{p_form}}
-                <button type='submit' name="submit_p_form" class="btn btn-success">Отправить</button>
-            </form>
-        </ul>
+        {% if post_added %}
+        Пост создан
+        {% endif %}
+        <form action="" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{p_form}}
+            <button type='submit' name="submit_p_form" class="btn btn-success">Отправить</button>
+        </form>
     </div>
 </div>
 {% endblock content %}

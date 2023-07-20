@@ -5,34 +5,7 @@
 {% endblock title %}
 
 {% block content %}
-
-<!-- MODAL -->
-<div class="ui modal mymodal">
-  <i class="close icon"></i>
-  <div class="header">
-    Редактирование профиля
-  </div>
-  <div class="image content">
-    <div class="ui medium image">
-      <img src="{{profile.avatar.url}}">
-    </div>
-    <div class="description">
-      <div class="ui header">Добавьте немного информации о себе</div>
-        <form action="" method="POST" class="ui form" enctype="multipart/form-data">
-          {% csrf_token %}
-          {{form.as_p}}
-        </form>
-    </div>
-    </div>
-    <div class="actions">
-        <button type="submit" class="ui positive right labeled icon button">
-          Подтвердить
-          <i class="checkmark icon"></i>
-        </button>
-  </div>
-</div>
-
-
+{% include 'modals/edit_profile_modal.html' %}
 <div style="margin-top:20px; margin-left:20px">
     <ul class="list-unstyled">
       {% if confirm %}
@@ -42,43 +15,28 @@
       <li>
           <div class="col-4">
             <img width="130" height="130" src={{profile.avatar.url}}>
-            <button class="btn btn-success" id="modal-btn">Редактировать профиль</button>
+              <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                  Редактировать профиль
+              </button>
           </div>
       </li>
         <li>
           <div class="col-8">
               <ul class="list-unstyled">
-
-                  <li>Никнейм
-                  {{profile.user}}</li>
-
-                  <li>Имя
-                  {{profile.first_name}}</li>
-
-                  <li>Фамилия
-                  {{profile.last_name}}</li>
-
-                  <li>О себе
-                  {{profile.bio}}</li>
-
-                  <li>Количество друзей
-                  {{profile.get_friends_no}}</li>
-
-                  <li>Друзья</li>
-                    <ul>
+                  <li>Никнейм: {{profile.user}}</li>
+                  <li>Имя: {{profile.first_name}}</li>
+                  <li>Фамилия: {{profile.last_name}}</li>
+                  <li>О себе: {{profile.bio}}</li>
+                  <li>Количество друзей: {{profile.get_friends_no}}</li>
+                  <li>Друзья: </li>
+                    <ul class="list-unstyled">
                       {% for friend in profile.get_friends %}
                         <li>{{friend}}</li>
                       {% endfor %}
                     </ul>
-
-                  <li>Количество постов
-                  {{profile.get_posts_no}}</li>
-
-                  <li>Лайков отправлено
-                  {{profile.get_likes_given_no}}</li>
-
-                  Лайков получено
-                  {{profile.get_likes_recieved_no}}</li>
+                  <li>Количество постов: {{profile.get_posts_no}}</li>
+                  <li>Лайков отправлено: {{profile.get_likes_given_no}}</li>
+                  <li>Лайков получено: {{profile.get_likes_recieved_no}}</li>
               </ul>
           </div>
         </li>
